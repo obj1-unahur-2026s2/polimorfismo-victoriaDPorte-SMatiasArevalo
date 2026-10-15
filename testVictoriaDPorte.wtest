@@ -2,3 +2,167 @@ import atletas.*
 import elementos.*
 import disciplinas.*
 
+
+test "Victoria se parece a Pareto y practica judo" {
+    victoria.cambiarAltura(150)
+    victoria.cambiarDisciplina(judo)
+    victoria.cambiarElemento(judogi)
+
+    assert.equals(150, victoria.altura())
+    assert.equals(judo, victoria.disciplina())
+    assert.equals(judogi, victoria.elemento())
+
+    assert.equals(2, judo.entrenadores())
+    assert.equals(225.0, judogi.costoElemento(victoria))
+    assert.equals(120, judo.presupuestoDisciplina(victoria))
+
+    assert.equals(245.0, victoria.presupuestoPropio())
+    assert.equals(365.0, victoria.presupuesto())
+}
+
+test "Victoria se parece a Delpo y practica tenis" {
+    victoria.cambiarAltura(210)
+    victoria.cambiarDisciplina(tenis)
+    victoria.cambiarElemento(raqueta)
+    tenis.cambiarEntrenadores(2)
+
+    assert.equals(210, victoria.altura())
+    assert.equals(tenis, victoria.disciplina())
+    assert.equals(raqueta, victoria.elemento())
+
+    assert.equals(2, tenis.entrenadores())
+    assert.equals(345, raqueta.costoElemento(victoria))
+    assert.equals(215, tenis.presupuestoDisciplina(victoria))
+
+    assert.equals(365, victoria.presupuestoPropio())
+    assert.equals(580, victoria.presupuesto())
+}
+
+test "Raqueta no supera el costo maximo de 400" {
+    victoria.cumplirAnios()
+    victoria.cumplirAnios()
+    victoria.cumplirAnios()
+    victoria.cumplirAnios()
+
+    assert.equals(27, victoria.edad())
+    assert.equals(400, raqueta.costoElemento(victoria))
+}
+
+test "Judogi respeta el costo minimo de 200" {
+    victoria.cambiarAltura(100)
+
+    assert.equals(200, judogi.costoElemento(victoria))
+}
+
+test "Judogi supera el minimo cuando corresponde" {
+    victoria.cambiarAltura(200)
+
+    assert.equals(300.0, judogi.costoElemento(victoria))
+}
+
+test "Stick calcula su costo con altura y edad" {
+    victoria.cambiarAltura(180)
+
+    assert.equals(507.5, stick.costoElemento(victoria))
+}
+
+test "Aumentar el valor de entrenadores modifica el presupuesto" {
+    victoria.cambiarDisciplina(tenis)
+    victoria.cambiarElemento(raqueta)
+    tenis.cambiarEntrenadores(4)
+
+    comiteOlimpico.nuevoValorEntrenador(20)
+
+    assert.equals(640, victoria.presupuesto())
+}
+
+test "Una nueva medalla aumenta el presupuesto del judo" {
+    victoria.cambiarDisciplina(judo)
+    victoria.cambiarElemento(judogi)
+    victoria.cambiarAltura(170)
+
+    comiteOlimpico.sumarUnaMedallaDeJudoGanada()
+
+    assert.equals(2, comiteOlimpico.medallasDeJudoGanadas())
+    assert.equals(240, judo.presupuestoDisciplina(victoria))
+    assert.equals(515.0, victoria.presupuesto())
+}
+
+test "Aumentar invitados incrementa el presupuesto" {
+    victoria.cambiarDisciplina(tenis)
+    victoria.cambiarElemento(raqueta)
+    victoria.cambiarCantidadDeInvitados(15)
+    tenis.cambiarEntrenadores(4)
+
+    assert.equals(15, victoria.cantidadDeInvitados())
+    assert.equals(245, tenis.presupuestoDisciplina(victoria))
+    assert.equals(630, victoria.presupuesto())
+}
+
+test "Tenis no permite menos de un entrenador" {
+    tenis.cambiarEntrenadores(0)
+
+    assert.equals(1, tenis.entrenadores())
+}
+
+test "Victoria practica judo utilizando una raqueta" {
+    victoria.cambiarDisciplina(judo)
+    victoria.cambiarElemento(raqueta)
+
+    assert.equals(345, raqueta.costoElemento(victoria))
+    assert.equals(485, victoria.presupuesto())
+}
+
+test "Victoria practica tenis utilizando un judogi" {
+    victoria.cambiarDisciplina(tenis)
+    victoria.cambiarElemento(judogi)
+    victoria.cambiarAltura(170)
+    tenis.cambiarEntrenadores(4)
+
+    assert.equals(255.0, judogi.costoElemento(victoria))
+    assert.equals(510.0, victoria.presupuesto())
+}
+
+test "Victoria cambia de disciplina y elemento durante la ejecucion" {
+    victoria.cambiarDisciplina(tenis)
+    victoria.cambiarElemento(raqueta)
+    tenis.cambiarEntrenadores(4)
+
+    assert.equals(600, victoria.presupuesto())
+
+    victoria.cambiarDisciplina(judo)
+    victoria.cambiarElemento(judogi)
+
+    assert.equals(395.0, victoria.presupuesto())
+}
+
+test "Victoria practica hockey utilizando un stick" {
+    victoria.cambiarDisciplina(hockey)
+    victoria.cambiarElemento(stick)
+    victoria.cambiarAltura(170)
+
+    assert.equals(2, hockey.entrenadores())
+    assert.equals(300, hockey.presupuestoDisciplina(victoria))
+    assert.equals(482.5, stick.costoElemento(victoria))
+    assert.equals(802.5, victoria.presupuesto())
+}
+
+test "Cambiar entrenadores de hockey modifica el presupuesto" {
+    victoria.cambiarDisciplina(hockey)
+    victoria.cambiarElemento(stick)
+    victoria.cambiarAltura(170)
+
+    hockey.cambiarEntrenadores(6)
+
+    assert.equals(6, hockey.entrenadores())
+    assert.equals(842.5, victoria.presupuesto())
+}
+
+test "Victoria practica hockey utilizando una raqueta" {
+    victoria.cambiarDisciplina(hockey)
+    victoria.cambiarElemento(raqueta)
+
+    hockey.cambiarEntrenadores(2)
+
+    assert.equals(665, victoria.presupuesto())
+}
